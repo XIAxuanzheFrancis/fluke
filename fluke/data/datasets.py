@@ -93,7 +93,7 @@ class Datasets:
     @classmethod
     def MNIST(
         cls,
-        path: str = "../data",
+        path: str = "D:\dataset",
         transforms: Optional[callable] = None,
         onthefly_transforms: Optional[callable] = None,
         channel_dim: bool = False,
@@ -140,7 +140,7 @@ class Datasets:
     @classmethod
     def MNISTM(
         cls,
-        path: str = "../data",
+        path: str = "D:/dataset",
         transforms: Optional[callable] = None,
         onthefly_transforms: Optional[callable] = None,
     ) -> DataContainer:
@@ -190,7 +190,7 @@ class Datasets:
     @classmethod
     def EMNIST(
         cls,
-        path: str = "../data",
+        path: str = "D:/dataset",
         transforms: Optional[callable] = None,
         onthefly_transforms: Optional[callable] = None,
         channel_dim: bool = False,
@@ -683,7 +683,7 @@ class Datasets:
     @classmethod
     def SHAKESPEARE(
         cls,
-        path: str = "./data",
+        path: str = "D:/dataset",
         batch_size: int = 10,
         onthefly_transforms: Optional[callable] = None,
     ) -> DummyDataContainer:
@@ -921,6 +921,83 @@ class Datasets:
 
         return DummyDataContainer(client_tr_assignments, client_te_assignments, server_te, 2)
 
+    @classmethod
+    def PIMA_DIABETES(
+        cls,
+        path: str = "D:/dataset",
+        transforms: Optional[callable] = None,
+    ) -> DataContainer:
+        try:
+            import kagglehub
+            import pandas as pd
+        except ImportError:
+            raise ImportError("Please install `kagglehub` and `pandas` to use this dataset.")
+
+        dataset_path = os.path.join(path, "pima_diabetes")
+        os.makedirs(dataset_path, exist_ok=True)
+        if not os.listdir(dataset_path):  # If empty, download
+            kagglehub.dataset_download("uciml/pima-indians-diabetes-database", path=dataset_path)
+
+        csv_file = os.path.join(dataset_path, "diabetes.csv")
+        df = pd.read_csv(csv_file)
+
+        features = df.drop("Outcome", axis=1).values
+        labels = df["Outcome"].values
+
+        split_idx = int(0.8 * len(features))
+        X_train, y_train = features[:split_idx], labels[:split_idx]
+        X_test, y_test = features[split_idx:], labels[split_idx:]
+
+        X_train = torch.FloatTensor(X_train)
+        y_train = torch.LongTensor(y_train)
+        X_test = torch.FloatTensor(X_test)
+        y_test = torch.LongTensor(y_test)
+
+        if transforms is not None:
+            X_train = transforms(X_train)
+            X_test = transforms(X_test)
+
+        return DataContainer(
+            X_train, y_train, X_test, y_test,
+            num_classes=2
+        )
+        
+    @classmethod
+    def HEARTDISEASE(
+        cls,
+        path: str = "D:/dataset",
+        transforms: Optional[callable] = None,
+    ) -> DataContainer:
+        try:
+            import pandas as pd
+        except ImportError:
+            raise ImportError("Please install `pandas` to use this dataset.")
+        dataset_path = os.path.join(path, "heartdisease")
+        os.makedirs(dataset_path, exist_ok=True)
+        csv_file_train = os.path.join(dataset_path, "all_train.csv")
+        csv_file_test = os.path.join(dataset_path, "all_test.csv")
+    
+        df_train = pd.read_csv(csv_file_train)
+        df_test = pd.read_csv(csv_file_test)
+    
+        features_train = df_train.drop("target", axis=1).values
+        labels_train = df_train["target"].values
+    
+        features_test = df_test.drop("target", axis=1).values
+        labels_test = df_test["target"].values
+    
+        X_train, y_train = features_train, labels_train
+        X_test, y_test = features_test, labels_test
+    
+        X_train = torch.FloatTensor(X_train)
+        y_train = torch.LongTensor(y_train)
+        X_test = torch.FloatTensor(X_test)
+        y_test = torch.LongTensor(y_test)
+
+        return DataContainer(
+            X_train, y_train, X_test, y_test,
+            num_classes=2
+        )
 
 Datasets._DATASET_MAP = {
     "mnist": Datasets.MNIST,
@@ -935,4 +1012,6 @@ Datasets._DATASET_MAP = {
     "fashion_mnist": Datasets.FASHION_MNIST,
     "cinic10": Datasets.CINIC10,
     "fcube": Datasets.FCUBE,
+    "pima_diabetes": Datasets.PIMA_DIABETES,
+    "heart_disease": Datasets.HEARTDISEASE,
 }

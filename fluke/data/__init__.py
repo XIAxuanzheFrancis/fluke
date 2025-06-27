@@ -833,10 +833,59 @@ class DataSplitter:
             assignments_te = [np.where(assignments_te == i)[0] for i in range(n)]
         return assignments_tr, assignments_te
 
+    @staticmethod
+    def datasetxia_split(
+        X_train: torch.Tensor,
+        y_train: torch.Tensor,
+        X_test: torch.Tensor,
+        y_test: torch.Tensor,
+        n: int,
+    ) -> tuple[list[np.ndarray], list[np.ndarray]]:
+        
+        assert X_test is not None, "X_test cannot be None!"
+        assert y_test is not None, "y_test cannot be None!"
+        assert n == 4
+        # assignments_tr = []
+        # assignments_te = []
+        # train_client1 = np.array(X_train[:329])
+        # train_client2 = np.array(X_train[329:636])
+        # train_client3 = np.array(X_train[636:704])
+        # train_client4 = np.array(X_train[704:])
+
+        # test_client1 = np.array(X_test[:83])
+        # test_client2 = np.array(X_test[83:160])
+        # test_client3 = np.array(X_test[160:178])
+        # test_client4 = np.array(X_test[178:])
+
+        # assignments_tr.append(train_client1)
+        # assignments_tr.append(train_client2)
+        # assignments_tr.append(train_client3)
+        # assignments_tr.append(train_client4)
+    
+        # assignments_te.append(test_client1)
+        # assignments_te.append(test_client2)
+        # assignments_te.append(test_client3)
+        # assignments_te.append(test_client4)
+        assignments_tr = [
+            np.arange(0, 329),
+            np.arange(329, 636),
+            np.arange(636, 704),
+            np.arange(704, len(X_train))
+        ]
+        assignments_te = [
+            np.arange(0, 83),
+            np.arange(83, 160),
+            np.arange(160, 178),
+            np.arange(178, len(X_test))
+        ]
+        return assignments_tr, assignments_te
+
+
     _iidness_functions = {
         "iid": iid,
         "qnt": quantity_skew,
         "lbl_qnt": label_quantity_skew,
         "dir": label_dirichlet_skew,
         "pathological": label_pathological_skew,
+        "datasetxia": datasetxia_split,
     }

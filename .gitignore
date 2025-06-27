@@ -22,3 +22,5 @@ chk_*
 logs/
 *.lock
 *coverage*
+.github/
+env/

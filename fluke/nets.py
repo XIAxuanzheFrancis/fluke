@@ -61,6 +61,8 @@ __all__ = [
     "Shakespeare_LSTM_E",
     "Shakespeare_LSTM_D",
     "Shakespeare_LSTM",
+    "MyMLP",
+    "MyMLP2",
 ]
 
 
@@ -1288,3 +1290,25 @@ class MoonCNN(EncoderHeadNet):
 
     def __init__(self, output_size: int = 10):
         super(MoonCNN, self).__init__(MoonCNN_E(), MoonCNN_D(output_size))
+
+class MyMLP(nn.Module):
+   def __init__(self):
+       super(MyMLP, self).__init__()
+       self.fc1 = nn.Linear(8, 10)
+       self.fc2 = nn.Linear(10, 2)
+
+   def forward(self, x: torch.Tensor) -> torch.Tensor:
+       x = F.relu(self.fc1(x))
+       x = F.relu(self.fc2(x))
+       return x
+
+class MyMLP2(nn.Module):
+    def __init__(self):
+       super(MyMLP2, self).__init__()
+       self.fc1 = nn.Linear(10, 12)
+       self.fc2 = nn.Linear(12, 2)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+       x = F.relu(self.fc1(x))
+       x = F.relu(self.fc2(x))
+       return x
