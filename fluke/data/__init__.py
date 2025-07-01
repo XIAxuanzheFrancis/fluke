@@ -841,7 +841,6 @@ class DataSplitter:
         y_test: torch.Tensor,
         n: int,
     ) -> tuple[list[np.ndarray], list[np.ndarray]]:
-        
         assert X_test is not None, "X_test cannot be None!"
         assert y_test is not None, "y_test cannot be None!"
         assert n == 4

@@ -148,6 +148,8 @@ class Log(ServerObserver, ChannelObserver, ClientObserver):
         if round == -1:
             round = self.current_round + 1
         self.tracker.add(perf_type=phase, metrics=evals, round=round, client_id=client_id)
+        if phase == "post-fit":
+            rich_print(f"Client {client_id} post-fit performance (round {round}): {evals}")
 
     def server_evaluation(
         self,
@@ -387,9 +389,11 @@ class TensorboardLog(Log):
         if prefit_perf:
             self._report("pre-fit", prefit_perf, prefit_perf["round"])
 
-        postfit_perf = self.tracker.summary("post-fit", round=round, include_round=True)
+        postfit_perf = self.tracker.summary("post-fit", round=round, include_round=True)#summary
         if postfit_perf:
             self._report("post-fit", postfit_perf, postfit_perf["round"])
+        # if postfit_perf:
+        #     self.pretty_log("postfit_perf", title=f"Round {round} - Per-client Post-Fit Performace")
 
         locals_perf = self.tracker.summary("locals", round=round, include_round=True)
         if locals_perf:

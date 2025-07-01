@@ -260,6 +260,23 @@ class Server(ObserverSubject):
         selected = np.random.choice(self.clients, n, replace=False)
         return selected
 
+    # def get_eligible_clients(self, eligible_perc: float) -> Sequence[Client]:
+    #     if not hasattr(self, "_selected_indices"):
+    #         self._selected_indices = set()
+
+    #     if eligible_perc == 1:
+    #         return self.clients
+
+    #     n = max(1, int(self.n_clients * eligible_perc))
+    
+    #     if len(self._selected_indices) == self.n_clients:
+    #         self._selected_indices = set()
+
+    #     available_indices = set(range(self.n_clients)) - self._selected_indices
+    #     selected_indices = np.random.choice(list(available_indices), min(n, len(available_indices)), replace=False)
+    #     self._selected_indices.update(selected_indices)
+    #     return [self.clients[i] for i in selected_indices]
+
     def receive_client_models(
         self, eligible: Sequence[Client], state_dict: bool = True
     ) -> Generator[torch.nn.Module, None, None]:

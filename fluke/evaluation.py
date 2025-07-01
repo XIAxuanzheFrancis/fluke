@@ -301,7 +301,7 @@ class PerformanceTracker:
             "global": {},  # round -> evals
             "locals": {},  # round -> {client_id -> evals}
             "pre-fit": {},  # round -> {client_id -> evals}
-            "post-fit": {},  # round -> {client_id -> evals}
+            "post-fit": {}, # round -> {client_id -> evals}
             "comm": {0: 0},  # round -> comm_cost
             "mem": {},  # round -> mem_usage
         }

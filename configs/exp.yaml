@@ -29,6 +29,6 @@ eval:
 logger:
   name: Log
 protocol:
-  eligible_perc: 0.25
+  eligible_perc: 1
   n_clients: 4
   n_rounds: 40

@@ -1304,11 +1304,13 @@ class MyMLP(nn.Module):
 
 class MyMLP2(nn.Module):
     def __init__(self):
-       super(MyMLP2, self).__init__()
-       self.fc1 = nn.Linear(10, 12)
-       self.fc2 = nn.Linear(12, 2)
+        super(MyMLP2, self).__init__()
+        self.fc1 = nn.Linear(10, 64)
+        self.fc2 = nn.Linear(64, 32)
+        self.fc3 = nn.Linear(32, 2)
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-       x = F.relu(self.fc1(x))
-       x = F.relu(self.fc2(x))
-       return x
+    def forward(self, x):
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = self.fc3(x)
+        return x
